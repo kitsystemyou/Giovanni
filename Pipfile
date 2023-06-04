@@ -7,6 +7,7 @@ name = "pypi"
 python-multipart = "*"
 ruff = "*"
 google-cloud-storage = "*"
+google-cloud-firestore = "*"
 
 [requires]
 python_version = "3.11"

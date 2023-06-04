@@ -2,7 +2,10 @@ from typing import Annotated
 
 from fastapi import FastAPI, File, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
-from google.cloud import storage
+
+from cloud_storage import authenticate_implicit_with_adc
+from fire_store import get_documents
+
 
 app = FastAPI()
 
@@ -19,23 +22,6 @@ app.add_middleware(
 )
 
 
-def authenticate_implicit_with_adc(file: UploadFile):
-    # Instantiates a client
-    storage_client = storage.Client()
-
-    # The name for the new bucket
-    bucket_name = "giovanni-storage"
-
-    destination_blob_name = f'user_id/group_id/{file.filename}'
-    print("destination", destination_blob_name)
-    # Creates the new bucket
-    # bucket = storage_client.create_bucket(bucket_name)
-    bucket = storage_client.get_bucket(bucket_name)
-    print(f"Bucket {bucket.name} get.")
-    blob = bucket.blob(destination_blob_name)
-    blob.upload_from_file(file.file)
-
-
 @app.get("/")
 async def root():
     return {"message": "Hello World"}
@@ -46,12 +32,18 @@ async def create_file(file: Annotated[bytes, File()]):
     return {"file_size": len(file)}
 
 
-@app.post("/upload")
-async def create_upload_file(file: UploadFile):
+@app.post("/upload/{user_id}/{group_id}")
+async def create_upload_file(file: UploadFile, user_id: str, group_id: str):
     print("filename:", file.filename)
-    authenticate_implicit_with_adc(file)
+    authenticate_implicit_with_adc(file, user_id, group_id)
     print("end")
     return {"filename": file.filename}
+
+
+@app.get("/collection/{user_id}/{group_id}")
+async def get_items(user_id, group_id: str):
+    dict_docs = get_documents(user_id, group_id)
+    return dict_docs
 
 
 # Snippet

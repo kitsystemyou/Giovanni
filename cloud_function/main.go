@@ -6,11 +6,14 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
+	"math/rand"
 	"strings"
+	"time"
 
 	"cloud.google.com/go/firestore"
 	"cloud.google.com/go/storage"
 	vision "cloud.google.com/go/vision/apiv1"
+	"github.com/oklog/ulid"
 )
 
 // GCSEvent is the payload of a GCS event. Please refer to the docs for
@@ -68,12 +71,19 @@ func GCStoOCR(ctx context.Context, e GCSEvent) error {
 		log.Fatalf("Failed to create client: %v", err)
 	}
 	defer firestoreClient.Close()
+
+	t := time.Now()
+	entropy := ulid.Monotonic(rand.New(rand.NewSource(t.UnixNano())), 0)
+    ulid := ulid.MustNew(ulid.Timestamp(t), entropy)
+
 	// NOte: set() will overwrite the document if it already exists. or create document if it doesn't exist.
-	_, err = firestoreClient.Collection(user_id).Doc(group_id).Set(ctx,
+	_, err = firestoreClient.Collection(user_id).Doc(group_id).Collection(ulid.String()).Doc(file_name).Set(ctx,
 		map[string]interface{}{
 		"title": file_name,
 		"path": e.Name,
 		"text": annotations[0].Description,
+		"created_at": t.String(),
+		"updated_at": t.String(),
 	})
 
 	return nil
