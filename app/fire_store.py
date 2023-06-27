@@ -17,3 +17,6 @@ def get_documents(user_id: str, group_id: str):
     print(f'user_id: {user_id}, group_id: {group_id}')
     docs.update({"result": set_list})
     return docs
+
+
+# TODO update document

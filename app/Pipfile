@@ -8,6 +8,7 @@ python-multipart = "*"
 ruff = "*"
 google-cloud-storage = "*"
 google-cloud-firestore = "*"
+fastapi = {version = "*", extras = ["all"]}
 
 [requires]
 python_version = "3.11"
