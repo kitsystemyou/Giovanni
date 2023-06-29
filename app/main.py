@@ -11,6 +11,7 @@ app = FastAPI()
 
 origins = [
     "http://localhost:3000",
+    "https://giovanniweb-onjvsvnita-uc.a.run.app",
 ]
 
 app.add_middleware(
