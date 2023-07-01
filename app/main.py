@@ -37,7 +37,6 @@ async def create_file(file: Annotated[bytes, File()]):
 async def create_upload_file(file: UploadFile, user_id: str, group_id: str):
     print("filename:", file.filename)
     authenticate_implicit_with_adc(file, user_id, group_id)
-    print("end")
     return {"filename": file.filename}
 
 
