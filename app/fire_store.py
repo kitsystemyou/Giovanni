@@ -5,12 +5,12 @@ project_id = "test-gke-360717"
 
 def get_documents(user_id: str, group_id: str):
     db = firestore.Client(project=project_id)
-    collections: list[firestore_v1.CollectionReference] = db.collection(user_id).document(group_id).collections(timeout=5)
+    collections: list[firestore_v1.CollectionReference] = db.collection(user_id).document(group_id).collections(timeout=1)
     print("got collections")
     docs: dict = {}
     set_list: list = []
     for c in collections:
-        for doc_snp in c.stream(timeout=5):
+        for doc_snp in c.stream(timeout=2):
             doc = doc_snp.to_dict()
             doc.update({"id": c.id})
             set_list.append(doc)
