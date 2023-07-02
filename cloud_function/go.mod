@@ -1,9 +1,10 @@
-module main
+module cloudfunc
 
 go 1.20
 
 require (
 	cloud.google.com/go/firestore v1.9.0
+	cloud.google.com/go/functions v1.10.0
 	cloud.google.com/go/storage v1.30.1
 	cloud.google.com/go/vision v1.2.0
 	github.com/oklog/ulid v1.3.1
