@@ -15,6 +15,7 @@ def get_documents(user_id: str, group_id: str):
             doc.update({"id": c.id})
             set_list.append(doc)
     print(f'user_id: {user_id}, group_id: {group_id}')
+    set_list.sort(key=lambda x: x["created_at"], reverse=True)
     docs.update({"result": set_list})
     return docs
 
