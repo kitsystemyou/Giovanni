@@ -59,7 +59,7 @@ func GCStoOCR(ctx context.Context, e GCSEvent) error {
 		return fmt.Errorf("NewImageFromReader: %v", err)
 	}
 	annotations, err := annotationClient.DetectTexts(ctx, image, nil, 10)
-	if err != nil {
+	if err != nil || len(annotations) == 0 {
 		return fmt.Errorf("DetectTexts: %v", err)
 	}
 	log.Printf("Extracted text: %q", annotations[0].Description)
