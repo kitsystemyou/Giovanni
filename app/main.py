@@ -2,8 +2,8 @@ from fastapi import FastAPI, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 
 from cloud_storage import authenticate_implicit_with_adc
-from fire_store import get_documents
-
+from fire_store import get_documents, update_documents
+from model import UpdateText
 
 app = FastAPI()
 
@@ -38,3 +38,8 @@ async def get_items(user_id, group_id: str):
     dict_docs = get_documents(user_id, group_id)
     return dict_docs
 
+
+@app.patch("/collection/{user_id}/{group_id}")
+async def update(user_id, group_id: str, update_text: UpdateText):
+    dict_docs = update_documents(user_id, group_id, update_text)
+    return dict_docs
